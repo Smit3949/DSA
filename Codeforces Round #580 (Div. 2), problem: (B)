@@ -1,0 +1,157 @@
+
+#include<bits/stdc++.h>
+
+typedef long long ll;
+
+using namespace std;
+
+vector<ll> primes;
+
+// Helping functions
+void sieve(ll n)
+{
+    bool prime[n + 1];
+    memset(prime, true, sizeof(prime));
+
+    for (ll p = 2; p * p <= n; p++)
+    {
+        if (prime[p] == true)
+        {
+            for (ll i = p * p; i <= n; i += p)
+                prime[i] = false;
+        }
+    }
+
+    for (ll p = 2; p <= n; p++)
+        if (prime[p])
+            primes.push_back(p);
+}
+
+bool isPrime(ll n)
+{
+    if (n <= 1)
+        return false;
+    if (n <= 3)
+        return true;
+
+    if (n % 2 == 0 || n % 3 == 0)
+        return false;
+
+    for (ll i = 5; i * i <= n; i = i + 6)
+        if (n % i == 0 || n % (i + 2) == 0)
+            return false;
+
+    return true;
+}
+
+bool checkInSet(set<ll>& s, ll item) {
+    auto it = s.find(item);
+    if (it == s.end())
+        return false;
+    return true;
+}
+
+ll fastPower(ll x, ll y)
+{
+    ll temp;
+    if ( y == 0)
+        return 1;
+    temp = fastPower(x, y / 2);
+    if (y % 2 == 0)
+        return temp * temp;
+    else
+        return x * temp * temp;
+}
+
+
+ll inverseModPower(ll x, ll y, ll p)
+{
+    ll res = 1;
+
+    x = x % p;
+
+    while (y > 0)
+    {
+
+        if (y & 1)
+            res = (res * x) % p;
+
+        y = y >> 1;
+        x = (x * x) % p;
+    }
+    return res;
+}
+
+ll modInverse(ll n, ll p) {
+    return inverseModPower(n, p - 2, p);
+}
+
+
+ll nCr(ll n, ll r, ll p)
+{
+
+    if (n < r)
+        return 0;
+
+    if (r == 0)
+        return 1;
+
+    ll fac[n + 1];
+    fac[0] = 1;
+    for (ll i = 1; i <= n; i++)
+        fac[i] = (fac[i - 1] * i) % p;
+
+    return (fac[n] * modInverse(fac[r], p) % p * modInverse(fac[n - r], p) % p)
+           % p;
+}
+
+// Here you go
+
+void solve() {
+    ll n;
+    cin >> n;
+    vector<ll> v(n);
+    for (ll i = 0; i < n; i++) {
+        cin >> v[i];
+    }
+    ll nc = 0, pc = 0, zc = 0;
+    ll ans = 0;
+    for (auto i : v) {
+        if (i < 0) {
+            nc++;
+            ans += -1 - i;
+        }
+        else if (i > 0) {
+            pc++;
+            ans += i - 1;
+        }
+        else {
+            zc++;
+        }
+    }
+    if (nc % 2 == 1) {
+        if (zc >= 1) {
+            ans += zc;
+        }
+        else {
+            ans += 2;
+        }
+    }
+    else {
+        ans += zc;
+    }
+    cout << ans << "\n";
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    ll t = 1;
+    // cin>>t;
+    while (t--)
+        solve();
+}
