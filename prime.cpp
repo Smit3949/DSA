@@ -17,5 +17,5 @@ int main()
 {
     int n;
     cin >> n;
-    cout << isPrime(n);
+    cout << isPrime(n) << endl;
 }
